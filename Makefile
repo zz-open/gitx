@@ -8,8 +8,8 @@ help:
 test:
 	@echo "test ..."
 
-.PHONY: auto_push
-auto_push:
+.PHONY: push
+push:
 	@git add .
 	git commit -m "自动push"
 	git push origin main
