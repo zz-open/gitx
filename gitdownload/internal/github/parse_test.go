@@ -1,4 +1,4 @@
-package download
+package github
 
 import (
 	"log"
@@ -9,8 +9,8 @@ import (
 
 func TestParseGithubUrl(t *testing.T) {
 	url := "https://github.com/zzopen/mysqldoc/blob/main/test/main.go"
-	githubRepository, err := NewGitRepositoryByUrl(url)
-	log.Printf("%+v\n", githubRepository)
+	repository, err := NewRepositoryByUrl(url)
+	log.Printf("%+v\n", repository)
 	assert.Equal(t, nil, err)
 }
 

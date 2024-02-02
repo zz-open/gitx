@@ -1,15 +1,20 @@
-package download
+package github
 
 import (
 	"errors"
+	"log"
+	"path/filepath"
 	"regexp"
+	"strings"
+
+	"github.com/zz-open/gitx/common"
 )
 
-func NewGitRepositoryByUrl(url string) (*GitHubRepository, error) {
-	return parseGithubUrl(url)
+func NewRepositoryByUrl(url string) (*Repository, error) {
+	return parseUrl(url)
 }
 
-func parseGithubUrl(url string) (*GitHubRepository, error) {
+func parseUrl(url string) (*Repository, error) {
 	if url == "" {
 		return nil, errors.New("url 必填")
 	}
@@ -21,10 +26,10 @@ func parseGithubUrl(url string) (*GitHubRepository, error) {
 
 	path := ""
 	if matches[7] != "" {
-		path = FilterTailSlash(matches[7])
+		path = common.FilterTailSlash(matches[7])
 	}
 
-	repo := &GitHubRepository{
+	repo := &Repository{
 		Protocol:    HTTPS_PROTOCOL,
 		Host:        GITHUB_DOMAIN,
 		Username:    matches[1],
@@ -34,16 +39,21 @@ func parseGithubUrl(url string) (*GitHubRepository, error) {
 		Path:        path,
 	}
 
+	if !strings.HasSuffix(path, "/") {
+		repo.FileName = filepath.Base(path)
+	}
+
 	return repo, nil
 }
 
 func match(url string) ([]string, error) {
-	re := regexp.MustCompile(GithubReoisitoryRegexp())
+	re := regexp.MustCompile(ReoisitoryRegexp())
 	if !re.MatchString(url) {
 		return nil, errors.New("请输入正确的git仓库地址")
 	}
 
 	matches := re.FindStringSubmatch(url)
+	log.Println(matches)
 	if len(matches) <= 0 {
 		return nil, errors.New("无法获取匹配项")
 	}

@@ -1,8 +1,10 @@
-package download
+package github
 
-import "fmt"
+import (
+	"fmt"
+)
 
-type GitHubRepository struct {
+type Repository struct {
 	Protocol    string `json:"protocol"`
 	Host        string `json:"host"`
 	Username    string `json:"username"`
@@ -10,20 +12,34 @@ type GitHubRepository struct {
 	Branch      string `json:"branch"`
 	Type        string `json:"type"`
 	Path        string `json:"path"`
+	FileName    string `json:"file_name"`
+	Token       string `json:"token"`
 }
 
-func (gr *GitHubRepository) RootUrl() string {
-	return fmt.Sprintf("%s://%s/%s/%s", gr.Protocol, gr.Host, gr.Username, gr.ProjectName)
+func (repo *Repository) IsFile() bool {
+	return repo.Type == "blob"
 }
 
-func (gr *GitHubRepository) BranchUrl() string {
-	return fmt.Sprintf("%s://%s/%s/%s/%s", gr.Protocol, gr.Host, gr.Username, gr.ProjectName, gr.Branch)
+func (repo *Repository) IsDir() bool {
+	return repo.Type == "tree"
 }
 
-func (gr *GitHubRepository) GitTreesApiUrl() string {
-	return fmt.Sprintf("%s://%s/repos/%s/%s/git/trees/%s?recursive=1", gr.Protocol, GITHUB_API_URL, gr.Username, gr.ProjectName, gr.Branch)
+func (repo *Repository) RootUrl() string {
+	return fmt.Sprintf("%s://%s/%s/%s", repo.Protocol, repo.Host, repo.Username, repo.ProjectName)
 }
 
-func (gr *GitHubRepository) RawUserContentUrl() string {
-	return fmt.Sprintf("%s://%s/%s/%s/%s/%s", gr.Protocol, GITHUB_RAW_USER_CONTENT_URL, gr.Username, gr.ProjectName, gr.Branch, gr.Path)
+func (repo *Repository) BranchUrl() string {
+	return fmt.Sprintf("%s://%s/%s/%s/%s", repo.Protocol, repo.Host, repo.Username, repo.ProjectName, repo.Branch)
+}
+
+func (repo *Repository) GitTreesApiUrl() string {
+	return fmt.Sprintf("%s://%s/repos/%s/%s/git/trees/%s?recursive=1", repo.Protocol, GITHUB_API_URL, repo.Username, repo.ProjectName, repo.Branch)
+}
+
+func (repo *Repository) RawUserContentUrl() string {
+	return fmt.Sprintf("%s://%s/%s/%s/%s/%s", repo.Protocol, GITHUB_RAW_USER_CONTENT_URL, repo.Username, repo.ProjectName, repo.Branch, repo.Path)
+}
+
+func (repo *Repository) ContentApiUrl() string {
+	return fmt.Sprintf("%s://%s/repos/%s/%s/contents/%s?ref=%s", repo.Protocol, GITHUB_API_URL, repo.Username, repo.ProjectName, repo.Path, repo.Branch)
 }
