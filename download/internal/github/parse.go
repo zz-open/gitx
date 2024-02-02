@@ -3,18 +3,12 @@ package github
 import (
 	"errors"
 	"log"
-	"path/filepath"
 	"regexp"
-	"strings"
 
 	"github.com/zz-open/gitx/common"
 )
 
-func NewRepositoryByUrl(url string) (*Repository, error) {
-	return parseUrl(url)
-}
-
-func parseUrl(url string) (*Repository, error) {
+func UrlParseToRepository(url string, token string) (*Repository, error) {
 	if url == "" {
 		return nil, errors.New("url 必填")
 	}
@@ -37,10 +31,7 @@ func parseUrl(url string) (*Repository, error) {
 		Branch:      matches[5],
 		Type:        matches[4],
 		Path:        path,
-	}
-
-	if !strings.HasSuffix(path, "/") {
-		repo.FileName = filepath.Base(path)
+		Token:       token,
 	}
 
 	return repo, nil

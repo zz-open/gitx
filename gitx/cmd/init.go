@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
-	"github.com/zz-open/tpl/internal/git"
+	"github.com/zz-open/gitx/internal/git"
 )
 
 var (
