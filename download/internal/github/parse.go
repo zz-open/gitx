@@ -2,13 +2,13 @@ package github
 
 import (
 	"errors"
-	"log"
+	"path/filepath"
 	"regexp"
 
 	"github.com/zz-open/gitx/common"
 )
 
-func UrlParseToRepository(url string, token string) (*Repository, error) {
+func UrlParseToRepository(url string) (*Repository, error) {
 	if url == "" {
 		return nil, errors.New("url 必填")
 	}
@@ -24,14 +24,17 @@ func UrlParseToRepository(url string, token string) (*Repository, error) {
 	}
 
 	repo := &Repository{
-		Protocol:    HTTPS_PROTOCOL,
-		Host:        GITHUB_DOMAIN,
-		Username:    matches[1],
-		ProjectName: matches[2],
-		Branch:      matches[5],
-		Type:        matches[4],
-		Path:        path,
-		Token:       token,
+		Username: matches[1],
+		Repo:     matches[2],
+		Branch:   matches[5],
+		Type:     matches[4],
+		Path:     path,
+	}
+
+	if repo.IsDir() {
+		repo.Dirname = filepath.Base(path)
+	} else if repo.IsFile() {
+		repo.Filename = filepath.Base(path)
 	}
 
 	return repo, nil
@@ -44,7 +47,6 @@ func match(url string) ([]string, error) {
 	}
 
 	matches := re.FindStringSubmatch(url)
-	log.Println(matches)
 	if len(matches) <= 0 {
 		return nil, errors.New("无法获取匹配项")
 	}

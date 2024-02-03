@@ -9,6 +9,14 @@ const GITHUB_DOMAIN = "github.com"
 const GITHUB_API_URL = "api.github.com"
 const GITHUB_RAW_USER_CONTENT_URL = "raw.githubusercontent.com"
 
+func RepositoryRootUrl(username string, repo string) string {
+	return fmt.Sprintf("%s://%s/%s/%s", HTTPS_PROTOCOL, GITHUB_DOMAIN, username, repo)
+}
+
+func RepositoryBranchUrl(username string, repo string, branch string) string {
+	return fmt.Sprintf("%s://%s/%s/%s/%s", HTTPS_PROTOCOL, GITHUB_DOMAIN, username, repo, branch)
+}
+
 func ReoisitoryRegexp() string {
 	return fmt.Sprintf("^%s://%s/([^/]+)/([^/]+)(/(tree|blob)/([^/]+)(/(.*))?)?", HTTPS_PROTOCOL, GITHUB_DOMAIN)
 }
@@ -30,10 +38,14 @@ func GitTreesApiUrl(username string, repo string, sha1 string, isRecursive bool)
 	return fmt.Sprintf("%s://%s/repos/%s/%s/git/trees/%s%s", HTTPS_PROTOCOL, GITHUB_API_URL, username, repo, sha1, recursive)
 }
 
-func RepositoryRootUrl(username string, repo string) string {
-	return fmt.Sprintf("%s://%s/%s/%s", HTTPS_PROTOCOL, GITHUB_DOMAIN, username, repo)
+func ZipballUrl(username string, repo string, branch string) string {
+	return fmt.Sprintf("%s://%s/repos/%s/%s/zipball/%s", HTTPS_PROTOCOL, GITHUB_API_URL, username, repo, branch)
 }
 
-func RepositoryBranchUrl(username string, repo string, branch string) string {
-	return fmt.Sprintf("%s://%s/%s/%s/%s", HTTPS_PROTOCOL, GITHUB_DOMAIN, username, repo, branch)
+func TarballUrl(username string, repo string, branch string) string {
+	return fmt.Sprintf("%s://%s/repos/%s/%s/tarball/%s", HTTPS_PROTOCOL, GITHUB_API_URL, username, repo, branch)
+}
+
+func ArchiveZipUrl(username string, repo string, branch string) string {
+	return fmt.Sprintf("%s://%s/%s/%s/archive/%s.zip", HTTPS_PROTOCOL, GITHUB_DOMAIN, username, repo, branch)
 }

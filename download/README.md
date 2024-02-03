@@ -1,14 +1,28 @@
-# gitdownload
+# download
+下载github仓库资源
+
+- 支持下载单个文件
+- 支持下载仓库内的子目录或子文件夹
+- 支持下载整个仓库文件(压缩包形式)
+
+## github api docs
 - [github rest api](https://docs.github.com/en/rest/quickstart)
 - [download-a-repository-archive-zip](https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#download-a-repository-archive-zip)
 - [download-a-repository-archive-tar](https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#download-a-repository-archive-tar)
-- [get-a-tree](https://docs.github.com/en/rest/git/trees?apiVersion=2022-11-28#get-a-tree)
 - [get-repository-content](https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content)
+- [get-a-tree](https://docs.github.com/en/rest/git/trees?apiVersion=2022-11-28#get-a-tree)
+- [get-a-blob](https://docs.github.com/en/rest/git/blobs?apiVersion=2022-11-28#get-a-blob)
 
 下载git仓库中的[指定文件]或者[目录]到[本地路径]
 
-## 功能
+## 原理
 ### 下载单个文件
+
+方案：
+- [x] 使用固定格式url下载,例如: https://raw.githubusercontent.com/zzopen/mysqldoc/main/Makefile
+- 通过contents api响应信息中的 content字段，base64_decode即可 
+- 通过contents api响应信息中的 download_url(https://raw.githubusercontent.com/zzopen/mysqldoc/main/Makefile) 直接下载
+
 api 请求
 ```shell
 GET /repos/{owner}/{repo}/contents/{path}
@@ -38,134 +52,151 @@ GET /repos/{owner}/{repo}/contents/{path}
 }
 ```
 
-下载方式：
-- 通过响应信息中的 content | base64_decode
-- 通过响应信息中的 download_url 直接下载
-- 固定格式url转换下载 https://raw.githubusercontent.com/zzopen/mysqldoc/main/Makefile
-
 ### 下载指定目录
+分为以下几个步骤
+
+#### fetch contents
 api 请求
 ```shell
 GET /repos/{owner}/{repo}/contents/{path}
 
-示例：https://api.github.com/repos/zzopen/mysqldoc/contents/src?ref=main
+示例：https://api.github.com/repos/zzopen/mysqldoc/contents/cli?ref=main
+
+此api支持的文件数量较少，所以适合获取一级目录
 ```
 
 响应
 ```json
 [
   {
-    "name": ".gitignore",
-    "path": "src/.gitignore",
-    "sha": "0e41b127c228e4cddc40c303349ae55d42d1774d",
-    "size": 10,
-    "url": "https://api.github.com/repos/zzopen/mysqldoc/contents/src/.gitignore?ref=main",
-    "html_url": "https://github.com/zzopen/mysqldoc/blob/main/src/.gitignore",
-    "git_url": "https://api.github.com/repos/zzopen/mysqldoc/git/blobs/0e41b127c228e4cddc40c303349ae55d42d1774d",
-    "download_url": "https://raw.githubusercontent.com/zzopen/mysqldoc/main/src/.gitignore",
+    "name": "common.mk",
+    "path": "cli/common.mk",
+    "sha": "c7c07afb82eec8edf5b385644be4e56f19a8f8c3",
+    "size": 613,
+    "url": "https://api.github.com/repos/zzopen/mysqldoc/contents/cli/common.mk?ref=main",
+    "html_url": "https://github.com/zzopen/mysqldoc/blob/main/cli/common.mk",
+    "git_url": "https://api.github.com/repos/zzopen/mysqldoc/git/blobs/c7c07afb82eec8edf5b385644be4e56f19a8f8c3",
+    "download_url": "https://raw.githubusercontent.com/zzopen/mysqldoc/main/cli/common.mk",
     "type": "file",
     "_links": {
-      "self": "https://api.github.com/repos/zzopen/mysqldoc/contents/src/.gitignore?ref=main",
-      "git": "https://api.github.com/repos/zzopen/mysqldoc/git/blobs/0e41b127c228e4cddc40c303349ae55d42d1774d",
-      "html": "https://github.com/zzopen/mysqldoc/blob/main/src/.gitignore"
+      "self": "https://api.github.com/repos/zzopen/mysqldoc/contents/cli/common.mk?ref=main",
+      "git": "https://api.github.com/repos/zzopen/mysqldoc/git/blobs/c7c07afb82eec8edf5b385644be4e56f19a8f8c3",
+      "html": "https://github.com/zzopen/mysqldoc/blob/main/cli/common.mk"
     }
   },
   {
-    "name": "common",
-    "path": "src/common",
-    "sha": "b211e0cfd81b90493bd13c6e89047c0566610fea",
-    "size": 0,
-    "url": "https://api.github.com/repos/zzopen/mysqldoc/contents/src/common?ref=main",
-    "html_url": "https://github.com/zzopen/mysqldoc/tree/main/src/common",
-    "git_url": "https://api.github.com/repos/zzopen/mysqldoc/git/trees/b211e0cfd81b90493bd13c6e89047c0566610fea",
-    "download_url": null,
-    "type": "dir",
-    "_links": {
-      "self": "https://api.github.com/repos/zzopen/mysqldoc/contents/src/common?ref=main",
-      "git": "https://api.github.com/repos/zzopen/mysqldoc/git/trees/b211e0cfd81b90493bd13c6e89047c0566610fea",
-      "html": "https://github.com/zzopen/mysqldoc/tree/main/src/common"
-    }
-  },
-  {
-    "name": "etc",
-    "path": "src/etc",
-    "sha": "0419fd733ee76ddf6f3b96105135fe428d7902ef",
-    "size": 0,
-    "url": "https://api.github.com/repos/zzopen/mysqldoc/contents/src/etc?ref=main",
-    "html_url": "https://github.com/zzopen/mysqldoc/tree/main/src/etc",
-    "git_url": "https://api.github.com/repos/zzopen/mysqldoc/git/trees/0419fd733ee76ddf6f3b96105135fe428d7902ef",
-    "download_url": null,
-    "type": "dir",
-    "_links": {
-      "self": "https://api.github.com/repos/zzopen/mysqldoc/contents/src/etc?ref=main",
-      "git": "https://api.github.com/repos/zzopen/mysqldoc/git/trees/0419fd733ee76ddf6f3b96105135fe428d7902ef",
-      "html": "https://github.com/zzopen/mysqldoc/tree/main/src/etc"
-    }
-  },
-  {
-    "name": "internal",
-    "path": "src/internal",
-    "sha": "b7eb4c09ca61a2bb2239fdb9095f771ed1c87ba4",
-    "size": 0,
-    "url": "https://api.github.com/repos/zzopen/mysqldoc/contents/src/internal?ref=main",
-    "html_url": "https://github.com/zzopen/mysqldoc/tree/main/src/internal",
-    "git_url": "https://api.github.com/repos/zzopen/mysqldoc/git/trees/b7eb4c09ca61a2bb2239fdb9095f771ed1c87ba4",
-    "download_url": null,
-    "type": "dir",
-    "_links": {
-      "self": "https://api.github.com/repos/zzopen/mysqldoc/contents/src/internal?ref=main",
-      "git": "https://api.github.com/repos/zzopen/mysqldoc/git/trees/b7eb4c09ca61a2bb2239fdb9095f771ed1c87ba4",
-      "html": "https://github.com/zzopen/mysqldoc/tree/main/src/internal"
-    }
-  },
-  {
-    "name": "mysqldoc.go",
-    "path": "src/mysqldoc.go",
-    "sha": "f149449f028ea5c7b253e60b4ae848517f4c28f0",
-    "size": 99,
-    "url": "https://api.github.com/repos/zzopen/mysqldoc/contents/src/mysqldoc.go?ref=main",
-    "html_url": "https://github.com/zzopen/mysqldoc/blob/main/src/mysqldoc.go",
-    "git_url": "https://api.github.com/repos/zzopen/mysqldoc/git/blobs/f149449f028ea5c7b253e60b4ae848517f4c28f0",
-    "download_url": "https://raw.githubusercontent.com/zzopen/mysqldoc/main/src/mysqldoc.go",
+    "name": "server.mk",
+    "path": "cli/server.mk",
+    "sha": "3ad5eb193f34177d7c50a861c52398eec67c15c2",
+    "size": 1951,
+    "url": "https://api.github.com/repos/zzopen/mysqldoc/contents/cli/server.mk?ref=main",
+    "html_url": "https://github.com/zzopen/mysqldoc/blob/main/cli/server.mk",
+    "git_url": "https://api.github.com/repos/zzopen/mysqldoc/git/blobs/3ad5eb193f34177d7c50a861c52398eec67c15c2",
+    "download_url": "https://raw.githubusercontent.com/zzopen/mysqldoc/main/cli/server.mk",
     "type": "file",
     "_links": {
-      "self": "https://api.github.com/repos/zzopen/mysqldoc/contents/src/mysqldoc.go?ref=main",
-      "git": "https://api.github.com/repos/zzopen/mysqldoc/git/blobs/f149449f028ea5c7b253e60b4ae848517f4c28f0",
-      "html": "https://github.com/zzopen/mysqldoc/blob/main/src/mysqldoc.go"
-    }
-  },
-  {
-    "name": "ui",
-    "path": "src/ui",
-    "sha": "0bea968ac91c4d5f6e4732cae3f0205569399a84",
-    "size": 0,
-    "url": "https://api.github.com/repos/zzopen/mysqldoc/contents/src/ui?ref=main",
-    "html_url": "https://github.com/zzopen/mysqldoc/tree/main/src/ui",
-    "git_url": "https://api.github.com/repos/zzopen/mysqldoc/git/trees/0bea968ac91c4d5f6e4732cae3f0205569399a84",
-    "download_url": null,
-    "type": "dir",
-    "_links": {
-      "self": "https://api.github.com/repos/zzopen/mysqldoc/contents/src/ui?ref=main",
-      "git": "https://api.github.com/repos/zzopen/mysqldoc/git/trees/0bea968ac91c4d5f6e4732cae3f0205569399a84",
-      "html": "https://github.com/zzopen/mysqldoc/tree/main/src/ui"
+      "self": "https://api.github.com/repos/zzopen/mysqldoc/contents/cli/server.mk?ref=main",
+      "git": "https://api.github.com/repos/zzopen/mysqldoc/git/blobs/3ad5eb193f34177d7c50a861c52398eec67c15c2",
+      "html": "https://github.com/zzopen/mysqldoc/blob/main/cli/server.mk"
     }
   }
 ]
 ```
 
-## github url 映射关系
+#### 递归 fetch trees
+api 请求
 ```shell
-# 递归列出全部文件
-https://api.github.com/repos/zzopen/mysqldoc/git/trees/main?recursive=1
+GET /repos/{owner}/{repo}/git/trees/{tree_sha}
 
-# 获取文件内容
-https://raw.githubusercontent.com/zzopen/mysqldoc/main/Makefile
+- tree_sha 只能是分支名称或者目录的SHA1值，不能是文件的SHA1值
+- ?recursive=1 递归获取文件
 
+示例：https://api.github.com/repos/zzopen/mysqldoc/git/trees/b211e0cfd81b90493bd13c6e89047c0566610fea?recursive=1
+
+此api支持的文件数量较多，所以可通过递归参数获取所有文件
 ```
-```shell
-# 网页端查看目录
-https://github.com/zzopen/mysqldoc/tree/main/test
 
-# 网页端查看文件
-https://github.com/zzopen/mysqldoc/blob/main/test/main.go
+响应
+```json
+{
+  "sha": "b211e0cfd81b90493bd13c6e89047c0566610fea",
+  "url": "https://api.github.com/repos/zzopen/mysqldoc/git/trees/b211e0cfd81b90493bd13c6e89047c0566610fea",
+  "tree": [
+    {
+      "path": "embed",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "6f669ade2b64aa1a6221d37072ea6ff236c292c9",
+      "url": "https://api.github.com/repos/zzopen/mysqldoc/git/trees/6f669ade2b64aa1a6221d37072ea6ff236c292c9"
+    },
+    {
+      "path": "embed/config.yaml.tpl",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9cb2662e1d26537077cd55af5d8a4331f4f7fcf1",
+      "size": 141,
+      "url": "https://api.github.com/repos/zzopen/mysqldoc/git/blobs/9cb2662e1d26537077cd55af5d8a4331f4f7fcf1"
+    },
+  ],
+  "truncated": false
+}
+```
+#### fetch blobs
+api 请求
+```shell
+GET /repos/{owner}/{repo}/git/blobs/{tree_sha}
+
+示例：https://api.github.com/repos/zzopen/mysqldoc/git/blobs/9cb2662e1d26537077cd55af5d8a4331f4f7fcf1
+```
+
+响应
+```json
+{
+  "sha": "9cb2662e1d26537077cd55af5d8a4331f4f7fcf1",
+  "node_id": "B_kwDOKf5MF9oAKDljYjI2NjJlMWQyNjUzNzA3N2NkNTVhZjVkOGE0MzMxZjRmN2ZjZjE",
+  "size": 141,
+  "url": "https://api.github.com/repos/zzopen/mysqldoc/git/blobs/9cb2662e1d26537077cd55af5d8a4331f4f7fcf1",
+  "content": "UG9ydDogNzY1NApBdXRvT3BlbkRlZmF1bHRCcm93c2VyOiB0cnVlCkNyZWF0\nZVNxbEZpbGU6IHRydWUKTXlzcWw6CiAgSG9zdDogMTI3LjAuMC4xCiAgUG9y\ndDogMzMwNgogIFVzZXJuYW1lOiByb290CiAgUGFzc3dvcmQ6CiAgRGJOYW1l\nOiB0ZXN0\n",
+  "encoding": "base64"
+}
+```
+
+### 下载整个项目
+方案:
+- [x] https://github.com/zz-guide/go-guide/archive/main.zip
+- https://github.com/zz-guide/go-guide/archive/refs/heads/main.zip
+- https://api.github.com/repos/zzopen/mysqldoc/zipball/main
+- https://api.github.com/repos/zzopen/mysqldoc/tarball/main
+
+api 请求
+```shell
+GET /repos/{owner}/{repo}/tarball/{ref}
+
+示例：https://api.github.com/repos/zzopen/mysqldoc/tarball/main
+```
+
+响应
+```json
+Status: 302
+```
+
+api 请求
+```shell
+GET /repos/{owner}/{repo}/zipball/{ref}
+
+示例：https://api.github.com/repos/zzopen/mysqldoc/zipball/main
+```
+
+响应
+```json
+Status: 302
+```
+
+curl 请求示例：
+```curl
+curl -L \
+-H "Accept: application/vnd.github+json" \
+-H "X-GitHub-Api-Version: 2022-11-28" \
+https://api.github.com/repos/zzopen/mysqldoc/zipball/main \
+--output ./mysqldoc.zip
 ```

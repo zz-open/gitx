@@ -6,15 +6,8 @@ type Repository struct {
 	Branch   string `json:"branch"`
 	Type     string `json:"type"`
 	Path     string `json:"path"`
-	Token    string `json:"token"`
-}
-
-type RepositoryOption func(*Repository)
-
-func RepositoryWithToken(token string) RepositoryOption {
-	return func(r *Repository) {
-		r.Token = token
-	}
+	Filename string `json:"filename"`
+	Dirname  string `json:"dirname"`
 }
 
 func (repo *Repository) IsFile() bool {
@@ -35,6 +28,18 @@ func (repo *Repository) RootUrl() string {
 
 func (repo *Repository) BranchUrl() string {
 	return RepositoryBranchUrl(repo.Username, repo.Repo, repo.Branch)
+}
+
+func (repo *Repository) ZipballUrl() string {
+	return ZipballUrl(repo.Username, repo.Repo, repo.Branch)
+}
+
+func (repo *Repository) TarballUrl() string {
+	return TarballUrl(repo.Username, repo.Repo, repo.Branch)
+}
+
+func (repo *Repository) ArchiveZipUrl() string {
+	return ArchiveZipUrl(repo.Username, repo.Repo, repo.Branch)
 }
 
 func (repo *Repository) GitTreesApiUrl(isRecursive bool) string {

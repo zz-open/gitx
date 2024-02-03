@@ -50,7 +50,7 @@ func NewServiceContext(url string, opts ...ServiceContextOption) (*ServiceContex
 
 	svc.Outpath = absPath
 
-	repository, err := UrlParseToRepository(url, svc.Token)
+	repository, err := UrlParseToRepository(url)
 	if err != nil {
 		return nil, err
 	}

@@ -1,16 +1,10 @@
 package common
 
 import (
-	"errors"
-	"io"
 	"net/http"
 )
 
-func HttpDo(method string, url string, headers map[string]string) ([]byte, error) {
-	if url == "" {
-		return nil, errors.New("url必传")
-	}
-
+func HttpDo(method string, url string, headers map[string]string) (*http.Response, error) {
 	client := http.Client{}
 	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
@@ -23,25 +17,9 @@ func HttpDo(method string, url string, headers map[string]string) ([]byte, error
 		}
 	}
 
-	res, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	defer res.Body.Close()
-
-	body, err := io.ReadAll(res.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	return client.Do(req)
 }
 
-func HttpGet(url string, headers map[string]string) ([]byte, error) {
+func HttpGet(url string, headers map[string]string) (*http.Response, error) {
 	return HttpDo("GET", url, headers)
-}
-
-func HttpPost(url string, headers map[string]string) ([]byte, error) {
-	return HttpDo("POST", url, headers)
 }
