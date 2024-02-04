@@ -14,20 +14,14 @@
 - [get-a-blob](https://docs.github.com/en/rest/git/blobs?apiVersion=2022-11-28#get-a-blob)
 - https://raw.githubusercontent.com/{username}/{repo}/{branch}/path
 
-## 原理
-### 下载单个文件
+## github api 介绍
 
-方案:
-- 使用固定格式url下载,例如: https://raw.githubusercontent.com/zzopen/mysqldoc/main/Makefile
-- 通过contents api响应信息中的 content 字段，base64_decode 即可 
-- 通过contents api响应信息中的 download_url(https://raw.githubusercontent.com/xxx) 直接下载
-
-api 请求:
+### get contents api file
 ```shell
 GET /repos/{owner}/{repo}/contents/{path}
+```
 
 示例：https://api.github.com/repos/zzopen/mysqldoc/contents/cli/common.mk?ref=main
-```
 
 响应:
 ```json
@@ -50,21 +44,14 @@ GET /repos/{owner}/{repo}/contents/{path}
   }
 }
 ```
+### get contents api dir
+**注意：此api支持的文件数量较少，适合查找一级目录**
 
-### 下载子目录
-分为以下几个步骤
-
-#### fetch contents
-获取指定路径下的一级目录路径
-
-api 请求:
 ```shell
 GET /repos/{owner}/{repo}/contents/{path}
+```
 
 示例：https://api.github.com/repos/zzopen/mysqldoc/contents/cli?ref=main
-
-此api支持的文件数量较少，所以适合获取一级目录
-```
 
 响应:
 ```json
@@ -103,20 +90,17 @@ GET /repos/{owner}/{repo}/contents/{path}
   }
 ]
 ```
-
-#### fetch trees
-递归所有的子目录下的一级目录
-**注意：此api支持的文件数量较多，所以可通过增加递归参数获取所有文件**
-
-api 请求:
+### get trees api
 ```shell
 GET /repos/{owner}/{repo}/git/trees/{tree_sha}?recursive=1
 
 - tree_sha 只能是分支名称或者目录的SHA1值，不能是文件的SHA1值
 - ?recursive=1 递归获取文件
+```
+
+**注意：此api支持的文件数量较多，所以可通过增加递归参数获取所有文件**
 
 示例：https://api.github.com/repos/zzopen/mysqldoc/git/trees/b211e0cfd81b90493bd13c6e89047c0566610fea?recursive=1
-```
 
 响应:
 ```json
@@ -143,17 +127,14 @@ GET /repos/{owner}/{repo}/git/trees/{tree_sha}?recursive=1
   "truncated": false
 }
 ```
-#### fetch blobs
-并发下载文件
-
-api 请求
+### get blobs api
 ```shell
 GET /repos/{owner}/{repo}/git/blobs/{tree_sha}
-
-示例：https://api.github.com/repos/zzopen/mysqldoc/git/blobs/9cb2662e1d26537077cd55af5d8a4331f4f7fcf1
 ```
 
-响应
+示例：https://api.github.com/repos/zzopen/mysqldoc/git/blobs/9cb2662e1d26537077cd55af5d8a4331f4f7fcf1
+
+响应:
 ```json
 {
   "sha": "9cb2662e1d26537077cd55af5d8a4331f4f7fcf1",
@@ -163,25 +144,10 @@ GET /repos/{owner}/{repo}/git/blobs/{tree_sha}
   "content": "UG9ydDogNzY1NApBdXRvT3BlbkRlZmF1bHRCcm93c2VyOiB0cnVlCkNyZWF0\nZVNxbEZpbGU6IHRydWUKTXlzcWw6CiAgSG9zdDogMTI3LjAuMC4xCiAgUG9y\ndDogMzMwNgogIFVzZXJuYW1lOiByb290CiAgUGFzc3dvcmQ6CiAgRGJOYW1l\nOiB0ZXN0\n",
   "encoding": "base64"
 }
-
+```
 content | base_decode 之后的结果保存到文件中即可
-```
 
-### 下载整个项目
-方案:
-- https://api.github.com/repos/zzopen/mysqldoc/zipball/main (api)
-- https://api.github.com/repos/zzopen/mysqldoc/tarball/main (api)
-- https://github.com/zz-guide/go-guide/archive/main.zip (api)
-- https://github.com/zz-guide/go-guide/archive/refs/heads/main.zip (UI界面显示)
-
-重点观察response header中的以下字段:
-```shell
-content-disposition: attachment; filename=go-guide-main.zip
-Content-Type: application/zip
-```
-响应数据是二进制的，根据Content-Type创建对应后缀的文件保存数据即可
-
-api 请求:
+### tarball
 ```shell
 GET /repos/{owner}/{repo}/tarball/{ref}
 
@@ -189,11 +155,11 @@ GET /repos/{owner}/{repo}/tarball/{ref}
 ```
 
 响应:
-```json
+```text
 Status: 302
 ```
 
-api 请求
+### zipball
 ```shell
 GET /repos/{owner}/{repo}/zipball/{ref}
 
@@ -201,9 +167,16 @@ GET /repos/{owner}/{repo}/zipball/{ref}
 ```
 
 响应
-```json
+```text
 Status: 302
 ```
+### tarball, zipball
+重点观察response header中的以下字段:
+```shell
+content-disposition: attachment; filename=go-guide-main.zip
+Content-Type: application/zip
+```
+响应数据是二进制的，根据Content-Type创建对应后缀的文件保存数据即可
 
 curl 请求:
 ```shell
@@ -213,6 +186,27 @@ curl -L \
 https://api.github.com/repos/zzopen/mysqldoc/zipball/main \
 --output ./mysqldoc.zip
 ```
+
+## 原理
+### 下载单个文件
+- 使用固定格式url下载,例如: https://raw.githubusercontent.com/{username}/{repo}/{branch}/{path}
+- 通过contents api file 响应信息中的 content 字段，base64_decode 即可 
+- 通过contents api file 响应信息中的 download_url(https://raw.githubusercontent.com/{username}/{repo}/{branch}/{path}) 直接下载
+
+### 下载子目录
+以"https://github.com/zz-open/gitx/tree/main/download"为例
+
+- 调用 contents api 获取download下的一级目录和文件
+- 遍历一级目录调用 trees api 递归获取对应目录下的所有文件
+- 调用 blobs api 获取文件内容下载
+
+### 下载整个项目
+通过以下url发起http get请求即可
+
+- https://api.github.com/repos/zzopen/mysqldoc/zipball/main (get 请求)
+- https://api.github.com/repos/zzopen/mysqldoc/tarball/main (get 请求)
+- https://github.com/zz-guide/go-guide/archive/main.zip (get 请求)
+- https://github.com/zz-guide/go-guide/archive/refs/heads/main.zip (get 请求，从UI界面可查看)
 
 ## 依赖的第三方库
 ```shell
