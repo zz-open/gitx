@@ -3,13 +3,17 @@ package github
 import (
 	"errors"
 	"path/filepath"
+
+	"github.com/zz-open/gitx/download/internal/github/http"
 )
 
 type ServiceContext struct {
+	Token string
+
 	Url        string
 	Outpath    string
-	Token      string
 	Repository *Repository
+	HttpClient *http.HttpClient
 }
 
 type ServiceContextOption func(*ServiceContext)
@@ -56,5 +60,9 @@ func NewServiceContext(url string, opts ...ServiceContextOption) (*ServiceContex
 	}
 
 	svc.Repository = repository
+
+	httpClient := http.NewHttpClient(http.HttpClientWithToken(svc.Token))
+	svc.HttpClient = httpClient
+
 	return svc, nil
 }

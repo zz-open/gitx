@@ -1,36 +1,35 @@
 # download
-下载github仓库资源
+下载github仓库资源到本地
 
 - 支持下载单个文件
 - 支持下载仓库内的子目录或子文件夹
-- 支持下载整个仓库文件(压缩包形式)
+- 支持下载整个仓库文件(.zip或者.tar.gz)
 
-## github api docs
+## 项目用到的 github api
 - [github rest api](https://docs.github.com/en/rest/quickstart)
 - [download-a-repository-archive-zip](https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#download-a-repository-archive-zip)
 - [download-a-repository-archive-tar](https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#download-a-repository-archive-tar)
 - [get-repository-content](https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content)
 - [get-a-tree](https://docs.github.com/en/rest/git/trees?apiVersion=2022-11-28#get-a-tree)
 - [get-a-blob](https://docs.github.com/en/rest/git/blobs?apiVersion=2022-11-28#get-a-blob)
-
-下载git仓库中的[指定文件]或者[目录]到[本地路径]
+- https://raw.githubusercontent.com/{username}/{repo}/{branch}/path
 
 ## 原理
 ### 下载单个文件
 
-方案：
-- [x] 使用固定格式url下载,例如: https://raw.githubusercontent.com/zzopen/mysqldoc/main/Makefile
-- 通过contents api响应信息中的 content字段，base64_decode即可 
-- 通过contents api响应信息中的 download_url(https://raw.githubusercontent.com/zzopen/mysqldoc/main/Makefile) 直接下载
+方案:
+- 使用固定格式url下载,例如: https://raw.githubusercontent.com/zzopen/mysqldoc/main/Makefile
+- 通过contents api响应信息中的 content 字段，base64_decode 即可 
+- 通过contents api响应信息中的 download_url(https://raw.githubusercontent.com/xxx) 直接下载
 
-api 请求
+api 请求:
 ```shell
 GET /repos/{owner}/{repo}/contents/{path}
 
 示例：https://api.github.com/repos/zzopen/mysqldoc/contents/cli/common.mk?ref=main
 ```
 
-响应
+响应:
 ```json
 {
   "name": "common.mk",
@@ -52,11 +51,13 @@ GET /repos/{owner}/{repo}/contents/{path}
 }
 ```
 
-### 下载指定目录
+### 下载子目录
 分为以下几个步骤
 
 #### fetch contents
-api 请求
+获取指定路径下的一级目录路径
+
+api 请求:
 ```shell
 GET /repos/{owner}/{repo}/contents/{path}
 
@@ -65,7 +66,7 @@ GET /repos/{owner}/{repo}/contents/{path}
 此api支持的文件数量较少，所以适合获取一级目录
 ```
 
-响应
+响应:
 ```json
 [
   {
@@ -103,20 +104,21 @@ GET /repos/{owner}/{repo}/contents/{path}
 ]
 ```
 
-#### 递归 fetch trees
-api 请求
+#### fetch trees
+递归所有的子目录下的一级目录
+**注意：此api支持的文件数量较多，所以可通过增加递归参数获取所有文件**
+
+api 请求:
 ```shell
-GET /repos/{owner}/{repo}/git/trees/{tree_sha}
+GET /repos/{owner}/{repo}/git/trees/{tree_sha}?recursive=1
 
 - tree_sha 只能是分支名称或者目录的SHA1值，不能是文件的SHA1值
 - ?recursive=1 递归获取文件
 
 示例：https://api.github.com/repos/zzopen/mysqldoc/git/trees/b211e0cfd81b90493bd13c6e89047c0566610fea?recursive=1
-
-此api支持的文件数量较多，所以可通过递归参数获取所有文件
 ```
 
-响应
+响应:
 ```json
 {
   "sha": "b211e0cfd81b90493bd13c6e89047c0566610fea",
@@ -142,6 +144,8 @@ GET /repos/{owner}/{repo}/git/trees/{tree_sha}
 }
 ```
 #### fetch blobs
+并发下载文件
+
 api 请求
 ```shell
 GET /repos/{owner}/{repo}/git/blobs/{tree_sha}
@@ -159,23 +163,32 @@ GET /repos/{owner}/{repo}/git/blobs/{tree_sha}
   "content": "UG9ydDogNzY1NApBdXRvT3BlbkRlZmF1bHRCcm93c2VyOiB0cnVlCkNyZWF0\nZVNxbEZpbGU6IHRydWUKTXlzcWw6CiAgSG9zdDogMTI3LjAuMC4xCiAgUG9y\ndDogMzMwNgogIFVzZXJuYW1lOiByb290CiAgUGFzc3dvcmQ6CiAgRGJOYW1l\nOiB0ZXN0\n",
   "encoding": "base64"
 }
+
+content | base_decode 之后的结果保存到文件中即可
 ```
 
 ### 下载整个项目
 方案:
-- [x] https://github.com/zz-guide/go-guide/archive/main.zip
-- https://github.com/zz-guide/go-guide/archive/refs/heads/main.zip
-- https://api.github.com/repos/zzopen/mysqldoc/zipball/main
-- https://api.github.com/repos/zzopen/mysqldoc/tarball/main
+- https://api.github.com/repos/zzopen/mysqldoc/zipball/main (api)
+- https://api.github.com/repos/zzopen/mysqldoc/tarball/main (api)
+- https://github.com/zz-guide/go-guide/archive/main.zip (api)
+- https://github.com/zz-guide/go-guide/archive/refs/heads/main.zip (UI界面显示)
 
-api 请求
+重点观察response header中的以下字段:
+```shell
+content-disposition: attachment; filename=go-guide-main.zip
+Content-Type: application/zip
+```
+响应数据是二进制的，根据Content-Type创建对应后缀的文件保存数据即可
+
+api 请求:
 ```shell
 GET /repos/{owner}/{repo}/tarball/{ref}
 
 示例：https://api.github.com/repos/zzopen/mysqldoc/tarball/main
 ```
 
-响应
+响应:
 ```json
 Status: 302
 ```
@@ -192,11 +205,20 @@ GET /repos/{owner}/{repo}/zipball/{ref}
 Status: 302
 ```
 
-curl 请求示例：
-```curl
+curl 请求:
+```shell
 curl -L \
 -H "Accept: application/vnd.github+json" \
 -H "X-GitHub-Api-Version: 2022-11-28" \
 https://api.github.com/repos/zzopen/mysqldoc/zipball/main \
 --output ./mysqldoc.zip
+```
+
+## 依赖的第三方库
+```shell
+# 单元测试
+go get -u github.com/stretchr/testify
+
+# 协程池，文件数量较多的时候，不能无限开协程，需要使用池化技术控制数量
+go get -u github.com/panjf2000/ants/v2
 ```

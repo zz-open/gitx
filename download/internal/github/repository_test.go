@@ -26,16 +26,16 @@ func TestRepositoryUrlIsRoot(t *testing.T) {
 	repository, err := UrlParseToRepository(url)
 	assert.Equal(t, nil, err)
 	assert.Equal(t, true, repository.IsRoot())
-	assert.Equal(t, false, repository.IsFile())
-	assert.Equal(t, false, repository.IsDir())
+	assert.Equal(t, false, repository.IsBlob())
+	assert.Equal(t, false, repository.IsTree())
 }
 
 func TestRepositoryUrlIsFile(t *testing.T) {
 	url := "https://github.com/zzopen/mysqldoc/blob/main/src/common/query/query.go"
 	repository, err := UrlParseToRepository(url)
 	assert.Equal(t, nil, err)
-	assert.Equal(t, true, repository.IsFile())
-	assert.Equal(t, false, repository.IsDir())
+	assert.Equal(t, true, repository.IsTree())
+	assert.Equal(t, false, repository.IsBlob())
 	assert.Equal(t, false, repository.IsRoot())
 }
 
@@ -43,8 +43,8 @@ func TestRepositoryUrlIsDir(t *testing.T) {
 	url := "https://github.com/zzopen/mysqldoc/tree/main/src/common/query"
 	repository, err := UrlParseToRepository(url)
 	assert.Equal(t, nil, err)
-	assert.Equal(t, true, repository.IsDir())
-	assert.Equal(t, false, repository.IsFile())
+	assert.Equal(t, true, repository.IsTree())
+	assert.Equal(t, false, repository.IsBlob())
 	assert.Equal(t, false, repository.IsRoot())
 }
 
@@ -82,4 +82,16 @@ func TestRepositoryContentApiUrl(t *testing.T) {
 	repository, err := UrlParseToRepository(url)
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "https://api.github.com/repos/zzopen/mysqldoc/contents/src/common/query/query.go?ref=main", repository.ContentApiUrl())
+}
+
+func TestLastLevelDirname(t *testing.T) {
+	url := "https://github.com/zzopen/mysqldoc/blob/main/src/common/query/query.go"
+	repository, err := UrlParseToRepository(url)
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "query", repository.LastLevelDirname())
+
+	url1 := "https://github.com/zzopen/mysqldoc/tree/main/src/common/query"
+	repository1, err1 := UrlParseToRepository(url1)
+	assert.Equal(t, nil, err1)
+	assert.Equal(t, "query", repository1.LastLevelDirname())
 }

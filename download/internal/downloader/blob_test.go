@@ -1,4 +1,4 @@
-package download
+package downloader
 
 import (
 	"testing"
@@ -7,9 +7,9 @@ import (
 	"github.com/zz-open/gitx/download/internal/github"
 )
 
-func TestDownloadRootZip(t *testing.T) {
-	url := "https://github.com/zzopen/mysqldoc/tree/main"
-	outpath := "./"
+func TestBlobDownloader(t *testing.T) {
+	url := "https://github.com/zzopen/mysqldoc/blob/main/src/common/query/query.go"
+	outpath := "../../../_test_"
 	token := ""
 
 	svc, err := github.NewServiceContext(
@@ -21,13 +21,14 @@ func TestDownloadRootZip(t *testing.T) {
 	assert.Equal(t, nil, err)
 	assert.NotEqual(t, nil, svc)
 
-	err = DownloadRootZip(svc)
+	dl := NewBlobDownloader(svc)
+	err = dl.Download()
 	assert.Equal(t, nil, err)
 }
 
-func TestDownloadRootGZip(t *testing.T) {
-	url := "https://github.com/zzopen/mysqldoc/tree/main"
-	outpath := "./"
+func TestBlobDownloader2(t *testing.T) {
+	url := "https://github.com/zzopen/mysqldoc/blob/main/src/common/query/query.go"
+	outpath := "../../../_test_"
 	token := ""
 
 	svc, err := github.NewServiceContext(
@@ -39,6 +40,7 @@ func TestDownloadRootGZip(t *testing.T) {
 	assert.Equal(t, nil, err)
 	assert.NotEqual(t, nil, svc)
 
-	err = DownloadRootGZip(svc)
+	dl := NewBlobDownloader(svc)
+	err = dl.download2()
 	assert.Equal(t, nil, err)
 }

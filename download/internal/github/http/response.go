@@ -1,4 +1,4 @@
-package github
+package http
 
 // https://api.github.com/repos/(username)/(repository)/contents/(path) =============
 
@@ -50,11 +50,10 @@ func (item *ReposGitTreesItem) IsTree() bool {
 // https://api.github.com/repos/(username)/(repository)/git/blobs/(SHA1) =============
 
 type ReposGitBlobs struct {
-	Sha        string `json:"sha"`
-	Size       int    `json:"size"`
-	NodeId     string `json:"node_id"`
-	Url        string `json:"url"`
-	Encoding   string `json:"encoding"`
-	Content    string `json:"content"`
-	CustomPath string `json:"-"`
+	Sha      string `json:"sha"`
+	Size     int    `json:"size"`
+	NodeId   string `json:"node_id"`
+	Url      string `json:"url"`
+	Encoding string `json:"encoding"`
+	Content  string `json:"content"`
 }

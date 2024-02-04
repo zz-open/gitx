@@ -7,9 +7,9 @@ import (
 )
 
 func TestNewServiceContext(t *testing.T) {
-	outpath := ""
-	token := ""
 	url := "https://github.com/zzopen/mysqldoc/blob/main/src/common/query/query.go"
+	outpath := "../../../_test_"
+	token := ""
 
 	svc, err := NewServiceContext(
 		url,
@@ -17,5 +17,8 @@ func TestNewServiceContext(t *testing.T) {
 		ServiceContextWithToken(token),
 	)
 	assert.Equal(t, nil, err)
+
 	assert.NotEqual(t, nil, svc)
+	assert.NotEqual(t, nil, svc.Repository)
+	assert.NotEqual(t, nil, svc.HttpClient)
 }

@@ -1,4 +1,4 @@
-package download
+package downloader
 
 import (
 	"testing"
@@ -7,9 +7,9 @@ import (
 	"github.com/zz-open/gitx/download/internal/github"
 )
 
-func TestDownloadDir(t *testing.T) {
+func TestTreeDownloader(t *testing.T) {
 	url := "https://github.com/zzopen/mysqldoc/tree/main/src/common"
-	outpath := "./"
+	outpath := "../../../_test_/"
 	token := ""
 	svc, err := github.NewServiceContext(
 		url,
@@ -20,6 +20,7 @@ func TestDownloadDir(t *testing.T) {
 	assert.Equal(t, nil, err)
 	assert.NotEqual(t, nil, svc)
 
-	err = DownloadDir(svc)
+	var dl Downloader = NewTreeDownloader(svc)
+	err = dl.Download()
 	assert.Equal(t, nil, err)
 }
