@@ -94,7 +94,7 @@ GET /repos/{owner}/{repo}/contents/{path}
 ```shell
 GET /repos/{owner}/{repo}/git/trees/{tree_sha}?recursive=1
 
-- tree_sha 只能是分支名称或者目录的SHA1值，不能是文件的SHA1值
+- tree_sha 对应trees或者分支的SHA1值，SHA1只能使用github api接口返回的
 - ?recursive=1 递归获取文件
 ```
 

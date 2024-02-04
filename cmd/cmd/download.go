@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
-	"github.com/zz-open/gitx/internal/git"
 )
 
 var (
@@ -13,7 +12,7 @@ var (
 )
 
 var (
-	initCmd = &cobra.Command{
+	downloadCmd = &cobra.Command{
 		Use:     "init [remoteUrl]",
 		Aliases: []string{"create"},
 		Short:   "初始化项目",
@@ -28,7 +27,6 @@ var (
 		},
 		Run: func(_ *cobra.Command, args []string) {
 			log.Println(args)
-			git.RequestGithubProvideUrl()
 		},
 	}
 )

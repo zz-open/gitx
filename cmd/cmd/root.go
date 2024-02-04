@@ -9,7 +9,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "tpl",
+	Use:   "gitx",
 	Short: "基于模板创建项目",
 	Long: `基于模板创建项目，支持以下模板：
 	1. 内置了作者自己封装的模板
@@ -17,7 +17,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(initCmd)
+	rootCmd.AddCommand(downloadCmd)
 	rootCmd.CompletionOptions.DisableDefaultCmd = true // 禁用自动补全子命令
 	rootCmd.Version = fmt.Sprintf("%s %s/%s", "0.0.1", runtime.GOOS, runtime.GOARCH)
 }
