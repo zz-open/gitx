@@ -4,8 +4,8 @@ import (
 	"errors"
 	"path/filepath"
 
-	"github.com/zz-open/gitx/common"
-	"github.com/zz-open/gitx/download/internal/github"
+	"github.com/zz-open/zbin/common"
+	"github.com/zz-open/zbin/ghdownloader/internal/github"
 )
 
 func NewRootDownloader(svc *github.ServiceContext, archiveType string) *RootDownloader {

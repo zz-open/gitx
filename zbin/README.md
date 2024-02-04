@@ -1,4 +1,4 @@
-# gitx
+# zbin
 ## 依赖第三方库
 ```go
 go get -u github.com/spf13/cobra@latest

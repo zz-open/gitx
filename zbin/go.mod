@@ -1,4 +1,4 @@
-module github.com/zz-open/cmd
+module github.com/zz-open/zbin/zbin
 
 go 1.21.5
 

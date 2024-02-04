@@ -1,4 +1,4 @@
-module github.com/zz-open/gitx/download
+module github.com/zz-open/zbin/ghdownloader
 
 go 1.21.5
 

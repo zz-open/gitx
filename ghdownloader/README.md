@@ -1,4 +1,4 @@
-# download
+# ghdownloader
 下载github仓库资源到本地
 
 - 支持下载单个文件
@@ -194,7 +194,7 @@ https://api.github.com/repos/zzopen/mysqldoc/zipball/main \
 - 通过contents api file 响应信息中的 download_url(https://raw.githubusercontent.com/{username}/{repo}/{branch}/{path}) 直接下载
 
 ### 下载子目录
-以"https://github.com/zz-open/gitx/tree/main/download"为例
+以"https://github.com/zz-open/zbin/tree/main/download"为例
 
 - 调用 contents api 获取download下的一级目录和文件
 - 遍历一级目录调用 trees api 递归获取对应目录下的所有文件

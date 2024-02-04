@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/zz-open/gitx/download/internal/github"
+	"github.com/zz-open/zbin/ghdownloader/internal/github"
 )
 
 func TestRootDownloadZip(t *testing.T) {

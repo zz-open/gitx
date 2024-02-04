@@ -1,6 +1,6 @@
 package main
 
-import "github.com/zz-open/gitx/cmd/cmd"
+import "github.com/zz-open/zbin/zbin/cmd"
 
 func main() {
 	cmd.Execute()

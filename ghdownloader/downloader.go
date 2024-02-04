@@ -1,14 +1,14 @@
-package downlaod
+package ghdownloader
 
 import (
 	"errors"
 	"fmt"
 
-	"github.com/zz-open/gitx/download/internal/downloader"
-	"github.com/zz-open/gitx/download/internal/github"
+	"github.com/zz-open/zbin/ghdownloader/internal/downloader"
+	"github.com/zz-open/zbin/ghdownloader/internal/github"
 )
 
-func GithubDownload(url string, outpath string, token string) error {
+func Download(url string, outpath string, token string) error {
 	svc, err := github.NewServiceContext(
 		url,
 		github.ServiceContextWithOutpath(outpath),

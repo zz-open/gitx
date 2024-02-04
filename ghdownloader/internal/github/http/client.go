@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/zz-open/gitx/common"
+	"github.com/zz-open/zbin/common"
 )
 
 type RequestFailResponse struct {

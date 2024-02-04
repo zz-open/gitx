@@ -3,8 +3,8 @@ package downloader
 import (
 	"path/filepath"
 
-	"github.com/zz-open/gitx/common"
-	"github.com/zz-open/gitx/download/internal/github"
+	"github.com/zz-open/zbin/common"
+	"github.com/zz-open/zbin/ghdownloader/internal/github"
 )
 
 func NewBlobDownloader(svc *github.ServiceContext) *BlobDownloader {

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"path/filepath"
 
-	"github.com/zz-open/gitx/download/internal/github/http"
+	"github.com/zz-open/zbin/ghdownloader/internal/github/http"
 )
 
 type ServiceContext struct {
