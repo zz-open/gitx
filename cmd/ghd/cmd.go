@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/zz-open/zbin/ghdownloader"
+	"github.com/zz-open/zbin/ghd"
 )
 
 var (
@@ -28,9 +28,9 @@ var (
 			return nil
 		},
 		Run: func(_ *cobra.Command, args []string) {
-			err := ghdownloader.Download(url, outpath, personalToken)
+			err := ghd.Download(url, outpath, personalToken)
 			if err != nil {
-				fmt.Printf("err: %s\n", err)
+				fmt.Printf("%s\n", err)
 			}
 		},
 	}

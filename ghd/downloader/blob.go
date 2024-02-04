@@ -4,10 +4,11 @@ import (
 	"path/filepath"
 
 	"github.com/zz-open/zbin/common"
-	"github.com/zz-open/zbin/ghdownloader/internal/github"
+
+	"github.com/zz-open/zbin/ghd/sc"
 )
 
-func NewBlobDownloader(svc *github.ServiceContext) *BlobDownloader {
+func NewBlobDownloader(svc *sc.ServiceContext) *BlobDownloader {
 	bd := &BlobDownloader{
 		ServiceContext: svc,
 	}
@@ -16,7 +17,7 @@ func NewBlobDownloader(svc *github.ServiceContext) *BlobDownloader {
 }
 
 type BlobDownloader struct {
-	ServiceContext *github.ServiceContext
+	ServiceContext *sc.ServiceContext
 }
 
 func (bd *BlobDownloader) Download() error {

@@ -1,18 +1,18 @@
-package ghdownloader
+package ghd
 
 import (
 	"errors"
 	"fmt"
 
-	"github.com/zz-open/zbin/ghdownloader/internal/downloader"
-	"github.com/zz-open/zbin/ghdownloader/internal/github"
+	"github.com/zz-open/zbin/ghd/downloader"
+	"github.com/zz-open/zbin/ghd/sc"
 )
 
 func Download(url string, outpath string, token string) error {
-	svc, err := github.NewServiceContext(
+	svc, err := sc.NewServiceContext(
 		url,
-		github.ServiceContextWithOutpath(outpath),
-		github.ServiceContextWithToken(token),
+		sc.ServiceContextWithOutpath(outpath),
+		sc.ServiceContextWithToken(token),
 	)
 
 	if err != nil {

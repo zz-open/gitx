@@ -6,7 +6,7 @@ import (
 	"runtime"
 
 	"github.com/spf13/cobra"
-	"github.com/zz-open/zbin/zbin/cmd/ghd"
+	"github.com/zz-open/zbin/cmd/ghd"
 )
 
 var rootCmd = &cobra.Command{

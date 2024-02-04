@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 
 	"github.com/zz-open/zbin/common"
-	"github.com/zz-open/zbin/ghdownloader/internal/github"
+	"github.com/zz-open/zbin/ghd/sc"
 )
 
-func NewRootDownloader(svc *github.ServiceContext, archiveType string) *RootDownloader {
+func NewRootDownloader(svc *sc.ServiceContext, archiveType string) *RootDownloader {
 	rd := &RootDownloader{
 		ServiceContext: svc,
 		ArchiveType:    archiveType,
@@ -18,7 +18,7 @@ func NewRootDownloader(svc *github.ServiceContext, archiveType string) *RootDown
 }
 
 type RootDownloader struct {
-	ServiceContext *github.ServiceContext
+	ServiceContext *sc.ServiceContext
 	ArchiveType    string
 }
 

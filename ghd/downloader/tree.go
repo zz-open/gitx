@@ -9,7 +9,7 @@ import (
 
 	"github.com/panjf2000/ants/v2"
 	"github.com/zz-open/zbin/common"
-	"github.com/zz-open/zbin/ghdownloader/internal/github"
+	"github.com/zz-open/zbin/ghd/sc"
 )
 
 type ResourceChunk struct {
@@ -18,7 +18,7 @@ type ResourceChunk struct {
 	OutPath string `json:"outpath"`
 }
 
-func NewTreeDownloader(svc *github.ServiceContext) *TreeDownloader {
+func NewTreeDownloader(svc *sc.ServiceContext) *TreeDownloader {
 	td := &TreeDownloader{
 		ServiceContext: svc,
 		FileChunks:     make([]*ResourceChunk, 0),
@@ -29,7 +29,7 @@ func NewTreeDownloader(svc *github.ServiceContext) *TreeDownloader {
 }
 
 type TreeDownloader struct {
-	ServiceContext *github.ServiceContext
+	ServiceContext *sc.ServiceContext
 	FileChunks     []*ResourceChunk // 最终要下载的所有文件存到此处
 	GitTreeChunks  []*ResourceChunk // 需要递归的顶级目录存到此处
 }

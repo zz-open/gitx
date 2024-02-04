@@ -1,4 +1,4 @@
-package github
+package sc
 
 import (
 	"testing"

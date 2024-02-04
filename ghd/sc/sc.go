@@ -1,10 +1,11 @@
-package github
+package sc
 
 import (
 	"errors"
 	"path/filepath"
 
-	"github.com/zz-open/zbin/ghdownloader/internal/github/http"
+	"github.com/zz-open/zbin/ghd/github"
+	"github.com/zz-open/zbin/ghd/http"
 )
 
 type ServiceContext struct {
@@ -12,7 +13,7 @@ type ServiceContext struct {
 
 	Url        string
 	Outpath    string
-	Repository *Repository
+	Repository *github.Repository
 	HttpClient *http.HttpClient
 }
 
@@ -54,7 +55,7 @@ func NewServiceContext(url string, opts ...ServiceContextOption) (*ServiceContex
 
 	svc.Outpath = absPath
 
-	repository, err := UrlParseToRepository(url)
+	repository, err := github.UrlParseToRepository(url)
 	if err != nil {
 		return nil, err
 	}
