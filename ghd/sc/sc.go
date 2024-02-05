@@ -4,8 +4,8 @@ import (
 	"errors"
 	"path/filepath"
 
-	"github.com/zz-open/zbin/ghd/github"
-	"github.com/zz-open/zbin/ghd/http"
+	"github.com/zz-open/zb/ghd/github"
+	"github.com/zz-open/zb/ghd/http"
 )
 
 type ServiceContext struct {

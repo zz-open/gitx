@@ -13,7 +13,7 @@ ADD go.mod .
 ADD go.sum .
 RUN go mod download
 COPY . .
-RUN go build -ldflags="-s -w" -o /app/zbin ./zbin.go
+RUN go build -ldflags="-s -w" -o /app/zb ./zb.go
 
 
 FROM golang:alpine
@@ -25,6 +25,6 @@ COPY --from=builder /usr/share/zoneinfo/Asia/Shanghai /usr/share/zoneinfo/Asia/S
 ENV TZ Asia/Shanghai
 
 WORKDIR /app
-COPY --from=builder /app/zbin /usr/bin/zbin
+COPY --from=builder /app/zb /usr/local/bin/zb
 
-CMD ["zbin"]
+CMD ["zb"]

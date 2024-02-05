@@ -3,10 +3,11 @@ package http
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 
-	"github.com/zz-open/zbin/common"
+	"github.com/zz-open/zb/common"
 )
 
 type RequestFailResponse struct {
@@ -56,7 +57,7 @@ func NewHttpClient(opts ...HttpClientOption) *HttpClient {
 func (c *HttpClient) GetHeaders() map[string]string {
 	headers := make(map[string]string)
 	if c.Token != "" {
-		headers["Authorization: Bearer"] = c.Token
+		headers["Authorization"] = fmt.Sprintf("Bearer %s", c.Token)
 	}
 
 	if c.Accept != "" {

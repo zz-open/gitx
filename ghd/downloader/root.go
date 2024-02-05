@@ -4,8 +4,8 @@ import (
 	"errors"
 	"path/filepath"
 
-	"github.com/zz-open/zbin/common"
-	"github.com/zz-open/zbin/ghd/sc"
+	"github.com/zz-open/zb/common"
+	"github.com/zz-open/zb/ghd/sc"
 )
 
 func NewRootDownloader(svc *sc.ServiceContext, archiveType string) *RootDownloader {

@@ -5,19 +5,20 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/zz-open/zbin/ghd"
+	"github.com/zz-open/zb/ghd"
 )
 
 var (
 	personalToken string
 	url           string
 	outpath       string
+	Cmd           *cobra.Command
 )
 
-var (
+func init() {
 	Cmd = &cobra.Command{
 		Use:   "ghd [resourceUrl]",
-		Short: "github repository 下载工具",
+		Short: "下载github repository资源",
 		Long:  ``,
 		Args: func(_ *cobra.Command, args []string) error {
 			if len(args) < 1 {
@@ -34,9 +35,6 @@ var (
 			}
 		},
 	}
-)
-
-func init() {
-	Cmd.PersistentFlags().StringVarP(&personalToken, "token", "", "", "github personal token")
+	Cmd.PersistentFlags().StringVarP(&personalToken, "token", "", "", "Personal access tokens (classic)")
 	Cmd.PersistentFlags().StringVarP(&outpath, "outpath", "o", ".", "本地保存路径")
 }

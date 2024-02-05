@@ -3,9 +3,9 @@ package downloader
 import (
 	"path/filepath"
 
-	"github.com/zz-open/zbin/common"
+	"github.com/zz-open/zb/common"
 
-	"github.com/zz-open/zbin/ghd/sc"
+	"github.com/zz-open/zb/ghd/sc"
 )
 
 func NewBlobDownloader(svc *sc.ServiceContext) *BlobDownloader {

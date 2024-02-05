@@ -1,10 +1,10 @@
 on:
   push:
     tags:
-      - "zbin/zbin/*"
+      - "zb/zb/*"
 jobs:
   releases-matrix:
-    name: Release zbin binary
+    name: Release zb binary
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -24,6 +24,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
-          project_path: "zbin"
-          binary_name: "zbin"
-          extra_files: zbin/README.md
+          project_path: "zb"
+          binary_name: "zb"
+          extra_files: zb/README.md

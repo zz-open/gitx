@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"regexp"
 
-	"github.com/zz-open/zbin/common"
+	"github.com/zz-open/zb/common"
 )
 
 type Repository struct {

@@ -6,9 +6,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const TEST_OUT_PATH = "../../_test_"
+
 func TestNewServiceContext(t *testing.T) {
 	url := "https://github.com/zzopen/mysqldoc/blob/main/src/common/query/query.go"
-	outpath := "../../../_test_"
+	outpath := TEST_OUT_PATH
 	token := ""
 
 	svc, err := NewServiceContext(

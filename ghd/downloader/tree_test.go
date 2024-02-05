@@ -4,12 +4,12 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/zz-open/zbin/ghd/sc"
+	"github.com/zz-open/zb/ghd/sc"
 )
 
 func TestTreeDownloader(t *testing.T) {
 	url := "https://github.com/zzopen/mysqldoc/tree/main/src/common"
-	outpath := "../../../_test_/"
+	outpath := TEST_OUT_PATH
 	token := ""
 	svc, err := sc.NewServiceContext(
 		url,

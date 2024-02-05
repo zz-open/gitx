@@ -1,5 +1,5 @@
-MAIN_GO=zbin.go
-BIN_NAME=zbin
+MAIN_GO=zb.go
+BIN_NAME=zb
 
 .PHONY: help test
 help:
