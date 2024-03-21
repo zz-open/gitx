@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/zz-open/zb/ghd/sc"
+	"github.com/zz-open/zb/modules/ghd/sc"
 )
 
 const TEST_OUT_PATH = "../../_test_"

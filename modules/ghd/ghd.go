@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/zz-open/zb/ghd/downloader"
-	"github.com/zz-open/zb/ghd/sc"
+	"github.com/zz-open/zb/modules/ghd/downloader"
+	"github.com/zz-open/zb/modules/ghd/sc"
 )
 
 func Download(url string, outpath string, token string) error {

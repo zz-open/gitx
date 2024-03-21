@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/zz-open/zb/ghd"
+	"github.com/zz-open/zb/modules/ghd"
 )
 
 var (
@@ -18,7 +18,7 @@ var (
 func init() {
 	Cmd = &cobra.Command{
 		Use:   "ghd [resourceUrl]",
-		Short: "下载github repository资源",
+		Short: "下载 github 项目指定文件",
 		Long:  ``,
 		Args: func(_ *cobra.Command, args []string) error {
 			if len(args) < 1 {

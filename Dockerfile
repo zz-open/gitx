@@ -13,7 +13,7 @@ ADD go.mod .
 ADD go.sum .
 RUN go mod download
 COPY . .
-RUN go build -ldflags="-s -w" -o /app/zb ./zb.go
+RUN go build -ldflags="-s -w" -o /app/zb ./main.go
 
 
 FROM golang:alpine

@@ -6,15 +6,14 @@
 go get -u github.com/spf13/cobra@latest
 
 go install github.com/spf13/cobra-cli@latest
-
-github.com/gookit/color
 ```
 
 ## 如何使用
 - go install github.com/zz-open/zb@latest
-- 下载release文件
+- 下载release文件进行安装
 
-
-### 目标
-- [] 发布二进制Assets
-- [] common 模块优化
+## 命令
+| 命令 | 说明 |
+| --- | --- |
+| zb ghd | 下载github项目指定文件 |
+| zb dns | 输出数据库dsn示例  |

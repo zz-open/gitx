@@ -5,7 +5,7 @@ import (
 
 	"github.com/zz-open/zb/common"
 
-	"github.com/zz-open/zb/ghd/sc"
+	"github.com/zz-open/zb/modules/ghd/sc"
 )
 
 func NewBlobDownloader(svc *sc.ServiceContext) *BlobDownloader {

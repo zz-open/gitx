@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/zz-open/zb/dsn"
+	"github.com/zz-open/zb/modules/dsn"
 )
 
 var (
@@ -14,7 +14,7 @@ var (
 func init() {
 	Cmd = &cobra.Command{
 		Use:   "dsn",
-		Short: "输出dsn示例",
+		Short: "输出数据库dsn示例",
 		Long:  ``,
 		Run: func(_ *cobra.Command, args []string) {
 			dsnInstance := dsn.NewDsn(

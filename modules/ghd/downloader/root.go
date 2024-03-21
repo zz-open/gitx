@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/zz-open/zb/common"
-	"github.com/zz-open/zb/ghd/sc"
+	"github.com/zz-open/zb/modules/ghd/sc"
 )
 
 func NewRootDownloader(svc *sc.ServiceContext, archiveType string) *RootDownloader {
